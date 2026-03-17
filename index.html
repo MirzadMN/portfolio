@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>portfolio | Portfolio</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;500;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js">
+// Copy to clipboard
+function copyText(text){
+navigator.clipboard.writeText(text);
+alert('Copied: '+text);
+}
+
+</script>
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Inter',sans-serif}
+body{background:linear-gradient(135deg,#020617,#0f172a,#020617);color:#e5e7eb;overflow-x:hidden}
+
+nav{position:fixed;width:100%;padding:20px 40px;display:flex;justify-content:space-between;background:rgba(2,6,23,0.7);backdrop-filter:blur(12px);z-index:1000}
+nav a{color:#94a3b8;margin-left:20px;text-decoration:none}
+nav a:hover{color:#fff}
+
+.hero{height:100vh;display:flex;align-items:center;justify-content:space-between;padding:0 10%}
+.hero-text h1{font-size:3.5rem;color:#f8fafc}
+.hero-text p{color:#94a3b8;margin-top:10px}
+
+.hero img{width:350px;height:450px;object-fit:cover;border-radius:20px;mix-blend-mode:lighten;opacity:.9;box-shadow:0 0 80px rgba(59,130,246,0.15)}
+
+section{padding:120px 10%;scroll-margin-top:80px}
+
+.card{background:rgba(255,255,255,0.04);padding:30px;border-radius:20px;backdrop-filter:blur(25px);margin-top:20px;transition:.4s;border:1px solid rgba(255,255,255,0.05)}
+.card:hover{transform:translateY(-10px);box-shadow:0 0 30px rgba(56,189,248,0.25)}
+
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:20px}
+
+.business-img{width:60%;max-width:300px;border-radius:15px;margin-top:15px}
+
+.visit-btn{display:inline-block;margin-top:15px;padding:10px 18px;border-radius:10px;background:rgba(56,189,248,0.1);color:#38bdf8;text-decoration:none;transition:0.3s}
+.visit-btn:hover{background:#38bdf8;color:#000;box-shadow:0 0 20px rgba(56,189,248,0.6)}
+
+.social a{margin-right:20px;color:#64748b;text-decoration:none}
+.social a:hover{color:#fff}
+
+.fade{opacity:0;transform:translateY(40px);transition:1s}
+.fade.show{opacity:1;transform:translateY(0)}
+
+canvas{margin-top:20px;max-width:500px;max-height:300px}
+
+.chart-row{display:flex;gap:40px;flex-wrap:wrap;justify-content:center}
+
+.disclaimer{margin-top:20px;font-size:0.85rem;color:#94a3b8;opacity:0.7}
+
+.contact-item{transition:0.3s;cursor:pointer}
+.contact-item:hover{color:#38bdf8;transform:translateX(8px)}
+
+</style>
+</head>
+
+<body>
+
+<nav>
+<h3><a href="#" class="logo">Personal portfolio</a></h3><div>
+<a href="#about">About</a>
+<a href="#work">Work</a>
+<a href="#performance">Performance</a>
+<a href="#contact">Contact</a>
+</div>
+</nav>
+
+<div class="hero">
+<div class="hero-text">
+<h1>Mirzad Manzoor</h1>
+<h2>Fund manager</h2>
+<p>Managing family portfolios & building wealth aligned with disciplined strategies</p>
+</div>
+<img src="your-photo.jpg">
+</div>
+
+<section id="about" class="fade">
+<h2>About Me</h2>
+<div class="card">
+<p>I began my journey in the financial markets in late 2023, with a primary focus on the Indian market. My core expertise lies in the index derivatives segment, where I aim to identify high-probability opportunities while maintaining a strong emphasis on minimal-risk setups.</P>
+<br>
+<p>My investment philosophy is centered around disciplined execution and long-term wealth creation through compounding. Rather than chasing aggressive returns, I prioritize consistency, capital preservation, and structured risk management.</p>
+<br>
+<p>While I have a growing interest in commodities, my primary focus remains on expanding and deepening my exposure to equities. I continuously work towards refining strategies that align with sustainable growth and evolving market dynamics.</p>
+</div>
+</section>
+
+<section id="work" class="fade">
+<h2>My Work</h2>
+<div class="grid">
+<div class="card"><h3>Fund Management</h3><p>Diversified strategies across equity, debt, and derivatives. </p></div>
+<div class="card"><h3>Mutual Fund Distribution</h3><p>Helping clients select funds aligned with financial goals.</p></div>
+</div>
+
+<div class="card">
+<h3>Zinvest</h3>
+<p>Mutual fund distribution business focused on disciplined investing.</p>
+<img src="zinvest.jpg" class="business-img"> <br><br>
+<a href="https://yourzinvestlink.com" target="_blank" class="visit-btn">Visit Website ↗</a>
+</div>
+</section>
+
+<!-- PERFORMANCE -->
+<section id="performance" class="fade">
+<h2>Performance vs Nifty</h2>
+
+<div class="card">
+<h3>Performance Overview</h3>
+<div class="chart-row">
+  <canvas id="chart1"></canvas>
+  <canvas id="chart2"></canvas>
+</div>
+<p class="disclaimer">Disclaimer: The performance data shown above is hypothetical and for illustrative purposes only. It does not represent actual client returns.</p>
+</div>
+
+</section>
+
+<section class="fade">
+<h2>Connect</h2>
+<div class="social">
+<a href="#">LinkedIn</a>
+<a href="https://x.com/mrzd_09?s=21&t=Eo33Je6nO_SYNoYMqjFhPg">X.com</a>
+<a href="https://www.instagram.com/mirzadmanzoor?igsh=MW0yeTczaTFxN3dlYg%3D%3D&utm_source=qr">Instagram</a>
+</div>
+</section>
+
+<section id="contact" class="fade">
+<h2>Contact</h2>
+<div class="card">
+<p class="contact-item" onclick="copyText('mirzad.zbm@gmail.com')">
+📧 <a href="mailto:mirzad.zbm@gmail.com">mirzad.zbm@gmail.com</a>
+</p>
+<p class="contact-item" onclick="copyText('+91 96337 16525')">
+📞 <a href="tel:+91 96337 16525">+91 96337 16525</a>
+</p>
+</div>
+</section>
+
+<script>
+const faders=document.querySelectorAll('.fade');
+window.addEventListener('scroll',()=>{
+faders.forEach(el=>{
+if(el.getBoundingClientRect().top<window.innerHeight-100){el.classList.add('show')}})})
+
+// Charts
+new Chart(document.getElementById('chart1'),{
+type:'line',
+data:{
+labels:["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"],
+datasets:[
+{label:'Portfolio',data:[-1.5, -4.2, -2.1, 1.5, 4.8, 3.2, 6.5, 9.1, 7.4, 10.2, 8.5, 15.0],borderWidth:2,pointRadius:4},
+{label:'Nifty 50',data:[-0.58, -6.44, -0.54, 2.9, 5.8, 6.75, 3.63, 4.77, 2.72, 2.62, 7.55, 10.51],borderWidth:2,pointRadius:4}
+]
+},
+options:{
+plugins:{
+tooltip:{
+backgroundColor:'rgba(15,23,42,0.9)',
+titleColor:'#fff',
+bodyColor:'#cbd5f5',
+padding:12,
+borderColor:'#38bdf8',
+borderWidth:1
+},
+legend:{labels:{color:'#e5e7eb'}}
+},
+scales:{
+x:{ticks:{color:'#94a3b8'}},
+y:{ticks:{color:'#94a3b8'}}
+}
+}
+});
+
+new Chart(document.getElementById('chart2'),{
+type:'doughnut',
+data:{labels:['Equity','Debt','Gold'],datasets:[{data:[60,5,35]}]},
+options:{
+plugins:{
+tooltip:{
+backgroundColor:'rgba(15,23,42,0.9)',
+titleColor:'#fff',
+bodyColor:'#cbd5f5',
+padding:12
+},
+legend:{labels:{color:'#e5e7eb'}}
+}
+}
+});
+</script>
+
+</body>
+</html>
