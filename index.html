@@ -3,195 +3,923 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>portfolio | Portfolio</title>
-
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;500;700&display=swap" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/chart.js">
-// Copy to clipboard
-function copyText(text){
-navigator.clipboard.writeText(text);
-alert('Copied: '+text);
+<title>Mirzad Manzoor — Index F&O Trader</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Mono:wght@300;400;500&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+:root {
+  --gold: #c9a84c;
+  --gold-light: #e8c97a;
+  --gold-dim: rgba(201,168,76,0.15);
+  --ink: #070b12;
+  --deep: #0c1220;
+  --panel: rgba(255,255,255,0.032);
+  --border: rgba(201,168,76,0.18);
+  --muted: #4a5568;
+  --text: #c8d0dc;
+  --bright: #f0f4f8;
 }
 
-</script>
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
 
-<style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:'Inter',sans-serif}
-body{background:linear-gradient(135deg,#020617,#0f172a,#020617);color:#e5e7eb;overflow-x:hidden}
+html { scroll-behavior: smooth; }
 
-nav{position:fixed;width:100%;padding:20px 40px;display:flex;justify-content:space-between;background:rgba(2,6,23,0.7);backdrop-filter:blur(12px);z-index:1000}
-nav a{color:#94a3b8;margin-left:20px;text-decoration:none}
-nav a:hover{color:#fff}
+body {
+  background: var(--ink);
+  color: var(--text);
+  font-family: 'DM Mono', monospace;
+  overflow-x: hidden;
+  cursor: none;
+}
 
-.hero{height:100vh;display:flex;align-items:center;justify-content:space-between;padding:0 10%}
-.hero-text h1{font-size:3.5rem;color:#f8fafc}
-.hero-text p{color:#94a3b8;margin-top:10px}
+/* ── CUSTOM CURSOR ── */
+.cursor {
+  position: fixed; width: 10px; height: 10px;
+  border-radius: 50%; background: var(--gold);
+  pointer-events: none; z-index: 9999;
+  transform: translate(-50%, -50%);
+  transition: transform 0.08s, width 0.2s, height 0.2s, opacity 0.2s;
+  mix-blend-mode: difference;
+}
+.cursor-ring {
+  position: fixed; width: 36px; height: 36px;
+  border: 1px solid rgba(201,168,76,0.5);
+  border-radius: 50%; pointer-events: none; z-index: 9998;
+  transform: translate(-50%, -50%);
+  transition: transform 0.22s cubic-bezier(0.23,1,0.32,1), width 0.3s, height 0.3s, opacity 0.2s;
+}
+body:hover .cursor { opacity: 1; }
 
-.hero img{width:350px;height:450px;object-fit:cover;border-radius:20px;mix-blend-mode:lighten;opacity:.9;box-shadow:0 0 80px rgba(59,130,246,0.15)}
+/* ── NOISE OVERLAY ── */
+body::before {
+  content: '';
+  position: fixed; inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events: none; z-index: 0; opacity: 0.4;
+}
 
-section{padding:120px 10%;scroll-margin-top:80px}
+/* ── NAV ── */
+nav {
+  position: fixed; top: 0; width: 100%;
+  padding: 24px 60px;
+  display: flex; justify-content: space-between; align-items: center;
+  z-index: 100;
+  transition: background 0.4s, padding 0.4s;
+}
+nav.scrolled {
+  background: rgba(7,11,18,0.92);
+  backdrop-filter: blur(20px);
+  padding: 16px 60px;
+  border-bottom: 1px solid var(--border);
+}
+.nav-logo {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.2rem; font-weight: 300;
+  color: var(--gold); letter-spacing: 0.15em;
+  text-decoration: none;
+}
+.nav-links { display: flex; gap: 40px; }
+.nav-links a {
+  color: var(--muted); text-decoration: none;
+  font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase;
+  transition: color 0.3s;
+  position: relative;
+}
+.nav-links a::after {
+  content: ''; position: absolute; bottom: -4px; left: 0;
+  width: 0; height: 1px; background: var(--gold);
+  transition: width 0.3s;
+}
+.nav-links a:hover { color: var(--gold-light); }
+.nav-links a:hover::after { width: 100%; }
 
-.card{background:rgba(255,255,255,0.04);padding:30px;border-radius:20px;backdrop-filter:blur(25px);margin-top:20px;transition:.4s;border:1px solid rgba(255,255,255,0.05)}
-.card:hover{transform:translateY(-10px);box-shadow:0 0 30px rgba(56,189,248,0.25)}
+/* ── HERO ── */
+.hero {
+  min-height: 100vh;
+  display: grid; grid-template-columns: 1fr 1fr;
+  align-items: center;
+  padding: 0 10%;
+  position: relative; overflow: hidden;
+}
 
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:20px}
+.hero-bg {
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse 70% 70% at 70% 50%, rgba(201,168,76,0.04) 0%, transparent 70%),
+              radial-gradient(ellipse 40% 60% at 20% 80%, rgba(56,90,130,0.08) 0%, transparent 60%);
+  pointer-events: none;
+}
 
-.business-img{width:60%;max-width:300px;border-radius:15px;margin-top:15px}
+.hero-grid-lines {
+  position: absolute; inset: 0; pointer-events: none; overflow: hidden;
+}
+.hero-grid-lines::before {
+  content: '';
+  position: absolute; top: 0; right: 42%;
+  width: 1px; height: 100%;
+  background: linear-gradient(to bottom, transparent, var(--border), transparent);
+}
+.hero-grid-lines::after {
+  content: '';
+  position: absolute; left: 0; top: 55%;
+  width: 100%; height: 1px;
+  background: linear-gradient(to right, transparent, var(--border), transparent);
+}
 
-.visit-btn{display:inline-block;margin-top:15px;padding:10px 18px;border-radius:10px;background:rgba(56,189,248,0.1);color:#38bdf8;text-decoration:none;transition:0.3s}
-.visit-btn:hover{background:#38bdf8;color:#000;box-shadow:0 0 20px rgba(56,189,248,0.6)}
+.hero-left { position: relative; z-index: 1; }
 
-.social a{margin-right:20px;color:#64748b;text-decoration:none}
-.social a:hover{color:#fff}
+.hero-eyebrow {
+  font-size: 0.65rem; letter-spacing: 0.35em; text-transform: uppercase;
+  color: var(--gold); opacity: 0;
+  animation: fadeUp 0.8s 0.3s forwards;
+  display: flex; align-items: center; gap: 12px; margin-bottom: 28px;
+}
+.hero-eyebrow::before {
+  content: ''; width: 32px; height: 1px; background: var(--gold);
+}
 
-.fade{opacity:0;transform:translateY(40px);transition:1s}
-.fade.show{opacity:1;transform:translateY(0)}
+.hero-name {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(3.5rem, 6vw, 6rem);
+  font-weight: 300; line-height: 0.95;
+  color: var(--bright); letter-spacing: -0.02em;
+  opacity: 0; animation: fadeUp 1s 0.5s forwards;
+}
+.hero-name em {
+  font-style: italic; color: var(--gold-light);
+  display: block;
+}
 
-canvas{margin-top:20px;max-width:500px;max-height:300px}
+.hero-title {
+  font-size: 0.72rem; letter-spacing: 0.3em; text-transform: uppercase;
+  color: var(--muted); margin-top: 20px;
+  opacity: 0; animation: fadeUp 0.8s 0.8s forwards;
+}
 
-.chart-row{display:flex;gap:40px;flex-wrap:wrap;justify-content:center}
+.hero-desc {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.2rem; font-weight: 300; font-style: italic;
+  color: var(--text); margin-top: 28px; line-height: 1.7;
+  max-width: 420px;
+  opacity: 0; animation: fadeUp 0.8s 1s forwards;
+}
 
-.disclaimer{margin-top:20px;font-size:0.85rem;color:#94a3b8;opacity:0.7}
+.hero-cta {
+  display: inline-flex; align-items: center; gap: 14px;
+  margin-top: 48px; padding: 16px 36px;
+  border: 1px solid var(--border);
+  color: var(--gold-light);
+  font-size: 0.68rem; letter-spacing: 0.25em; text-transform: uppercase;
+  text-decoration: none;
+  background: var(--gold-dim);
+  backdrop-filter: blur(10px);
+  transition: all 0.3s; position: relative; overflow: hidden;
+  opacity: 0; animation: fadeUp 0.8s 1.2s forwards;
+}
+.hero-cta::before {
+  content: ''; position: absolute; inset: 0;
+  background: var(--gold); transform: translateX(-100%);
+  transition: transform 0.4s cubic-bezier(0.23,1,0.32,1);
+  z-index: -1;
+}
+.hero-cta:hover { color: var(--ink); border-color: var(--gold); }
+.hero-cta:hover::before { transform: translateX(0); }
 
-.contact-item{transition:0.3s;cursor:pointer}
-.contact-item:hover{color:#38bdf8;transform:translateX(8px)}
+.hero-right {
+  position: relative; z-index: 1;
+  display: flex; justify-content: flex-end; align-items: center;
+}
 
+.hero-photo-wrap {
+  position: relative;
+  opacity: 0; animation: fadeIn 1.2s 0.6s forwards;
+}
+.hero-photo-wrap::before {
+  content: ''; position: absolute;
+  inset: -1px; border-radius: 4px;
+  background: linear-gradient(135deg, var(--gold), transparent 60%);
+  z-index: -1;
+}
+.hero-photo-wrap::after {
+  content: '';
+  position: absolute; right: -20px; bottom: -20px;
+  width: 80%; height: 80%;
+  border: 1px solid var(--border);
+  border-radius: 4px; z-index: -2;
+}
+.hero-photo {
+  width: 340px; height: 440px; object-fit: cover;
+  border-radius: 3px; display: block;
+  filter: grayscale(20%) contrast(1.05);
+}
+
+/* stat ticker */
+.hero-stats {
+  position: absolute; bottom: 60px; left: 10%;
+  display: flex; gap: 48px; z-index: 2;
+  opacity: 0; animation: fadeUp 0.8s 1.4s forwards;
+}
+.stat { display: flex; flex-direction: column; gap: 4px; }
+.stat-val {
+  font-family: 'Syne', sans-serif;
+  font-size: 1.8rem; font-weight: 700;
+  color: var(--gold-light);
+  font-variant-numeric: tabular-nums;
+}
+.stat-label {
+  font-size: 0.6rem; letter-spacing: 0.25em; text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* ── MARQUEE ── */
+.marquee-wrap {
+  border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
+  padding: 14px 0; overflow: hidden; white-space: nowrap;
+  background: rgba(201,168,76,0.03);
+}
+.marquee-track {
+  display: inline-block;
+  animation: marquee 28s linear infinite;
+  font-size: 0.62rem; letter-spacing: 0.25em; text-transform: uppercase;
+  color: var(--muted);
+}
+.marquee-track span { margin: 0 40px; }
+.marquee-track .sep { color: var(--gold); }
+
+/* ── SECTIONS ── */
+section { padding: 120px 10%; position: relative; }
+
+.section-label {
+  font-size: 0.6rem; letter-spacing: 0.4em; text-transform: uppercase;
+  color: var(--gold); display: flex; align-items: center; gap: 14px;
+  margin-bottom: 16px;
+}
+.section-label::before { content: ''; width: 24px; height: 1px; background: var(--gold); }
+
+.section-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(2rem, 4vw, 3.6rem);
+  font-weight: 300; color: var(--bright);
+  line-height: 1.1; letter-spacing: -0.01em;
+}
+
+/* ── ABOUT ── */
+.about-grid {
+  display: grid; grid-template-columns: 1fr 1.4fr;
+  gap: 80px; align-items: start; margin-top: 72px;
+}
+.about-sidebar {}
+.about-philosophy {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.6rem; font-weight: 300; font-style: italic;
+  line-height: 1.6; color: var(--bright);
+  border-left: 2px solid var(--gold);
+  padding-left: 28px;
+  margin-bottom: 40px;
+}
+.about-badges { display: flex; flex-direction: column; gap: 14px; }
+.badge {
+  padding: 14px 20px;
+  border: 1px solid var(--border);
+  background: var(--panel);
+  border-radius: 2px;
+  font-size: 0.68rem; letter-spacing: 0.15em; text-transform: uppercase;
+  color: var(--gold-light);
+  display: flex; align-items: center; gap: 12px;
+}
+.badge::before { content: '◆'; font-size: 0.5rem; color: var(--gold); }
+
+.about-body p {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.15rem; line-height: 1.85;
+  color: var(--text); margin-bottom: 24px;
+}
+
+/* ── PERFORMANCE ── */
+#performance { background: linear-gradient(180deg, var(--ink) 0%, #080e1a 100%); }
+
+.perf-intro {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.15rem; line-height: 1.7;
+  color: var(--text); max-width: 600px;
+  margin-top: 20px; margin-bottom: 60px;
+}
+
+.metrics-row {
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  gap: 1px; background: var(--border);
+  border: 1px solid var(--border);
+  margin-bottom: 60px;
+}
+.metric {
+  background: var(--ink);
+  padding: 28px 24px;
+  position: relative; overflow: hidden;
+}
+.metric::before {
+  content: ''; position: absolute; top: 0; left: 0;
+  width: 100%; height: 2px;
+  background: linear-gradient(to right, var(--gold), transparent);
+  transform: scaleX(0); transform-origin: left;
+  transition: transform 0.6s ease;
+}
+.metric:hover::before { transform: scaleX(1); }
+.metric-val {
+  font-family: 'Syne', sans-serif;
+  font-size: 2.2rem; font-weight: 700;
+  color: var(--gold-light);
+  letter-spacing: -0.03em;
+}
+.metric-val.positive { color: #4ade80; }
+.metric-val.negative { color: #f87171; }
+.metric-lbl {
+  font-size: 0.6rem; letter-spacing: 0.25em; text-transform: uppercase;
+  color: var(--muted); margin-top: 8px;
+}
+
+.charts-wrap {
+  display: grid; grid-template-columns: 2fr 1fr;
+  gap: 24px; margin-bottom: 32px;
+}
+.chart-card {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 3px; padding: 32px;
+}
+.chart-card h4 {
+  font-size: 0.65rem; letter-spacing: 0.3em; text-transform: uppercase;
+  color: var(--gold); margin-bottom: 24px;
+}
+canvas { max-width: 100%; height: 260px !important; }
+
+.disclaimer {
+  font-size: 0.6rem; letter-spacing: 0.08em;
+  color: var(--muted); opacity: 0.6;
+  padding: 16px; border: 1px solid rgba(255,255,255,0.04);
+  border-radius: 2px; background: rgba(255,255,255,0.01);
+}
+
+/* ── WORK ── */
+.work-grid {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 1px; background: var(--border);
+  border: 1px solid var(--border);
+  margin-top: 60px;
+}
+.work-card {
+  background: var(--ink);
+  padding: 48px; position: relative; overflow: hidden;
+  transition: background 0.4s;
+}
+.work-card:hover { background: rgba(201,168,76,0.04); }
+.work-card-num {
+  font-family: 'Syne', sans-serif;
+  font-size: 4rem; font-weight: 800;
+  color: rgba(201,168,76,0.07);
+  position: absolute; top: 20px; right: 24px;
+  line-height: 1;
+}
+.work-card h3 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.6rem; font-weight: 400;
+  color: var(--bright); margin-bottom: 14px;
+}
+.work-card p {
+  font-size: 0.78rem; line-height: 1.75;
+  color: var(--text);
+}
+.work-card-link {
+  display: inline-flex; align-items: center; gap: 8px;
+  margin-top: 24px; font-size: 0.62rem; letter-spacing: 0.25em;
+  text-transform: uppercase; color: var(--gold);
+  text-decoration: none; transition: gap 0.3s;
+}
+.work-card-link:hover { gap: 16px; }
+
+/* Zinvest card – spans full width */
+.work-card.full {
+  grid-column: 1 / -1;
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 40px; align-items: center;
+}
+.zinvest-logo-placeholder {
+  width: 100%; max-width: 280px;
+  aspect-ratio: 4/3; object-fit: contain;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--panel);
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 2rem; color: var(--gold); letter-spacing: 0.1em;
+}
+
+/* ── CONNECT ── */
+.connect-grid {
+  display: grid; grid-template-columns: 1fr 1fr 1fr;
+  gap: 1px; background: var(--border);
+  border: 1px solid var(--border);
+  margin-top: 60px;
+}
+.social-card {
+  background: var(--ink); padding: 40px;
+  text-decoration: none; display: block;
+  transition: background 0.3s;
+  position: relative; overflow: hidden;
+}
+.social-card::after {
+  content: '↗'; position: absolute; top: 20px; right: 24px;
+  font-size: 1.2rem; color: var(--gold); opacity: 0;
+  transform: translate(-6px,6px); transition: all 0.3s;
+}
+.social-card:hover { background: rgba(201,168,76,0.04); }
+.social-card:hover::after { opacity: 1; transform: translate(0,0); }
+.social-card h3 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.4rem; color: var(--bright); margin-bottom: 8px;
+}
+.social-card p { font-size: 0.68rem; color: var(--muted); letter-spacing: 0.1em; }
+
+/* ── CONTACT ── */
+.contact-row {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 24px; margin-top: 60px;
+}
+.contact-card {
+  border: 1px solid var(--border);
+  background: var(--panel);
+  padding: 36px; border-radius: 2px;
+  cursor: pointer; transition: all 0.3s; position: relative;
+}
+.contact-card:hover {
+  border-color: var(--gold);
+  background: var(--gold-dim);
+  transform: translateY(-4px);
+}
+.contact-card-icon { font-size: 1.6rem; margin-bottom: 16px; }
+.contact-card-label {
+  font-size: 0.6rem; letter-spacing: 0.3em; text-transform: uppercase;
+  color: var(--gold); margin-bottom: 8px;
+}
+.contact-card-val {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.3rem; color: var(--bright);
+}
+.copy-hint {
+  font-size: 0.6rem; letter-spacing: 0.15em;
+  color: var(--muted); margin-top: 12px;
+  text-transform: uppercase;
+}
+.copy-toast {
+  position: fixed; bottom: 40px; left: 50%; transform: translateX(-50%);
+  background: var(--gold); color: var(--ink);
+  padding: 12px 28px; border-radius: 40px;
+  font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase;
+  font-weight: 600;
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.3s, transform 0.3s;
+  z-index: 999;
+}
+.copy-toast.show { opacity: 1; transform: translateX(-50%) translateY(-8px); }
+
+/* ── FOOTER ── */
+footer {
+  border-top: 1px solid var(--border);
+  padding: 40px 10%;
+  display: flex; justify-content: space-between; align-items: center;
+  font-size: 0.62rem; letter-spacing: 0.15em;
+  color: var(--muted);
+}
+footer span { color: var(--gold); }
+
+/* ── SCROLL REVEAL ── */
+.reveal {
+  opacity: 0; transform: translateY(40px);
+  transition: opacity 0.9s cubic-bezier(0.23,1,0.32,1), transform 0.9s cubic-bezier(0.23,1,0.32,1);
+}
+.reveal.visible { opacity: 1; transform: translateY(0); }
+
+/* ── KEYFRAMES ── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeIn {
+  from { opacity: 0; } to { opacity: 1; }
+}
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+@keyframes countUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; } 50% { opacity: 0.3; }
+}
+
+/* live indicator */
+.live-dot {
+  display: inline-block; width: 6px; height: 6px;
+  border-radius: 50%; background: #4ade80;
+  margin-right: 8px;
+  animation: pulse-dot 2s infinite;
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 900px) {
+  .hero { grid-template-columns: 1fr; padding: 120px 6% 80px; }
+  .hero-right { display: none; }
+  .hero-stats { flex-wrap: wrap; gap: 28px; }
+  .about-grid { grid-template-columns: 1fr; gap: 40px; }
+  .metrics-row { grid-template-columns: repeat(2,1fr); }
+  .charts-wrap { grid-template-columns: 1fr; }
+  .work-grid { grid-template-columns: 1fr; }
+  .work-card.full { grid-column: unset; grid-template-columns: 1fr; }
+  .connect-grid { grid-template-columns: 1fr; }
+  .contact-row { grid-template-columns: 1fr; }
+  nav { padding: 20px 24px; }
+  nav.scrolled { padding: 14px 24px; }
+  .nav-links { gap: 20px; }
+  section { padding: 80px 6%; }
+  footer { flex-direction: column; gap: 12px; text-align: center; }
+}
 </style>
 </head>
-
 <body>
 
-<nav>
-<h3><a href="#" class="logo">Personal portfolio</a></h3><div>
-<a href="#about">About</a>
-<a href="#work">Work</a>
-<a href="#performance">Performance</a>
-<a href="#contact">Contact</a>
-</div>
+<!-- CURSOR -->
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- TOAST -->
+<div class="copy-toast" id="toast">Copied to clipboard</div>
+
+<!-- NAV -->
+<nav id="nav">
+  <a class="nav-logo" href="#">MM</a>
+  <div class="nav-links">
+    <a href="#about">About</a>
+    <a href="#performance">Performance</a>
+    <a href="#work">Work</a>
+    <a href="#contact">Contact</a>
+  </div>
 </nav>
 
-<div class="hero">
-<div class="hero-text">
-<h1>Mirzad Manzoor</h1>
-<h2>Fund manager</h2>
-<p>Managing family portfolios & building wealth aligned with disciplined strategies</p>
-</div>
-<img src="your-photo.jpg">
-</div>
-
-<section id="about" class="fade">
-<h2>About Me</h2>
-<div class="card">
-<p>I began my journey in the financial markets in late 2023, with a primary focus on the Indian market. My core expertise lies in the index derivatives segment, where I aim to identify high-probability opportunities while maintaining a strong emphasis on minimal-risk setups.</P>
-<br>
-<p>My investment philosophy is centered around disciplined execution and long-term wealth creation through compounding. Rather than chasing aggressive returns, I prioritize consistency, capital preservation, and structured risk management.</p>
-<br>
-<p>While I have a growing interest in commodities, my primary focus remains on expanding and deepening my exposure to equities. I continuously work towards refining strategies that align with sustainable growth and evolving market dynamics.</p>
-</div>
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-grid-lines"></div>
+  <div class="hero-left">
+    <div class="hero-eyebrow">Index F&O Trader · Indian Markets</div>
+    <h1 class="hero-name">Mirzad<em>Manzoor</em></h1>
+    <p class="hero-title">Nifty · BankNifty · Index Options & Futures</p>
+    <p class="hero-desc">Precision trading in index derivatives — identifying high-probability setups in Nifty & BankNifty with structured risk and disciplined execution.</p>
+    <a href="#contact" class="hero-cta">
+      Begin a Conversation
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+        <path d="M1 13L13 1M13 1H4M13 1V10" stroke="currentColor" stroke-width="1.5"/>
+      </svg>
+    </a>
+  </div>
+  <div class="hero-right">
+    <div class="hero-photo-wrap">
+      <img src="your-photo.jpg" class="hero-photo" alt="Mirzad Manzoor" onerror="this.style.background='linear-gradient(135deg,#0c1220,#1a2540)';this.style.minHeight='440px'">
+    </div>
+  </div>
 </section>
 
-<section id="work" class="fade">
-<h2>My Work</h2>
-<div class="grid">
-<div class="card"><h3>Fund Management</h3><p>Diversified strategies across equity, debt, and derivatives. </p></div>
-<div class="card"><h3>Mutual Fund Distribution</h3><p>Helping clients select funds aligned with financial goals.</p></div>
+<div class="hero-stats">
+  <div class="stat">
+    <div class="stat-val" data-target="14" data-suffix="%">0%</div>
+    <div class="stat-label">Trading Returns FY26</div>
+  </div>
+  <div class="stat">
+    <div class="stat-val" data-target="2" data-suffix=" Yrs">0</div>
+    <div class="stat-label">Live Market Experience</div>
+  </div>
+  <div class="stat">
+    <div class="stat-val" data-target="90" data-suffix="%">0%</div>
+    <div class="stat-label">F&O Capital Allocation</div>
+  </div>
 </div>
 
-<div class="card">
-<h3>Zinvest</h3>
-<p>Mutual fund distribution business focused on disciplined investing.</p>
-<img src="zinvest.jpg" class="business-img"> <br><br>
-<a href="https://zinvest.wasmer.app" target="_blank" class="visit-btn">Visit Website ↗</a>
-</div>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="reveal">
+    <div class="section-label">Philosophy</div>
+    <h2 class="section-title">Trading with an edge,<br>not a guess.</h2>
+  </div>
+  <div class="about-grid reveal">
+    <div class="about-sidebar">
+      <div class="about-philosophy">
+        "Every trade is a calculated bet — not a hope. Structure the risk, let the edge play out."
+      </div>
+      <div class="about-badges">
+        <div class="badge">Nifty & BankNifty F&O</div>
+        <div class="badge">Options Buying & Selling</div>
+        <div class="badge">Trailing Stop-Loss Discipline</div>
+        <div class="badge">High-Probability Setups</div>
+        <div class="badge">Small Allocation · Long-Term Investing</div>
+      </div>
+    </div>
+    <div class="about-body">
+      <p>I began trading the Indian markets in late 2023, with a sharp focus on the index derivatives segment — primarily Nifty and BankNifty options and futures. My edge lies in identifying high-probability setups while keeping risk precisely defined on every trade.</p>
+      <p>Trading is my primary activity. I allocate the majority of capital to active F&O positions — intraday and positional — with a small reserve directed into long-term investments through mutual funds, building a parallel layer of compounding wealth alongside the trading book.</p>
+      <p>Beyond my own book, I run Zinvest — a mutual fund distribution practice helping others build disciplined, goal-aligned investment portfolios. Whether you're looking for trading insights or structured long-term wealth creation, I can help.</p>
+    </div>
+  </div>
 </section>
 
 <!-- PERFORMANCE -->
-<section id="performance" class="fade">
-<h2>Performance vs Nifty</h2>
+<section id="performance">
+  <div class="reveal">
+    <div class="section-label"><span class="live-dot"></span>Trading Performance</div>
+    <h2 class="section-title">Active F&O returns,<br>year by year.</h2>
+    <p class="perf-intro">Live trading results from index derivatives — Nifty & BankNifty options and futures. Primary capital deployed in F&O; a small allocation held in long-term investments.</p>
+  </div>
 
-<div class="card">
-<h3>Performance Overview</h3>
-<div class="chart-row">
-  <canvas id="chart1"></canvas>
-  <canvas id="chart2"></canvas>
-</div>
-<p class="disclaimer">Disclaimer: The performance data shown above is hypothetical and for illustrative purposes only. It does not represent actual client returns.</p>
-</div>
+  <div class="metrics-row reveal">
+    <div class="metric">
+      <div class="metric-val positive">+14.0%</div>
+      <div class="metric-lbl">F&O Returns FY26</div>
+    </div>
+    <div class="metric">
+      <div class="metric-val">90%</div>
+      <div class="metric-lbl">Capital in F&O</div>
+    </div>
+    <div class="metric">
+      <div class="metric-val positive">10%</div>
+      <div class="metric-lbl">Long-Term Investments</div>
+    </div>
+    <div class="metric">
+      <div class="metric-val">Derivatives</div>
+      <div class="metric-lbl">Instruments Traded</div>
+    </div>
+  </div>
 
+  <div class="charts-wrap reveal">
+    <div class="chart-card">
+      <h4>Monthly Cumulative P&L — F&O Trading (FY26)</h4>
+      <canvas id="chart1"></canvas>
+    </div>
+    <div class="chart-card">
+      <h4>Capital Allocation</h4>
+      <canvas id="chart2"></canvas>
+    </div>
+  </div>
+
+  <p class="disclaimer reveal">
+    ⚠ Disclaimer: The performance data shown above is hypothetical and for illustrative purposes only. Past performance does not guarantee future results. This does not constitute investment advice or a solicitation for funds.
+  </p>
 </section>
 
-<section class="fade">
-<h2>Connect</h2>
-<div class="social">
-<a href="#">LinkedIn</a>
-<a href="https://x.com/mrzd_09?s=21&t=Eo33Je6nO_SYNoYMqjFhPg">X.com</a>
-<a href="https://www.instagram.com/mirzadmanzoor?igsh=MW0yeTczaTFxN3dlYg%3D%3D&utm_source=qr">Instagram</a>
-</div>
+<!-- WORK -->
+<section id="work">
+  <div class="reveal">
+    <div class="section-label">Services</div>
+    <h2 class="section-title">How I work<br>with clients.</h2>
+  </div>
+
+  <div class="work-grid reveal">
+    <div class="work-card">
+      <div class="work-card-num">01</div>
+      <h3>Index F&O Trading</h3>
+      <p>Active trading in Nifty and BankNifty options & futures — intraday and positional. Every trade is structured with a defined risk, trailing stop-loss discipline, and a clear setup rationale before entry.</p>
+    </div>
+    <div class="work-card">
+      <div class="work-card-num">02</div>
+      <h3>Mutual Fund Distribution</h3>
+      <p>Helping clients build long-term wealth through carefully selected mutual fund portfolios — aligned to individual goals, risk tolerance, and time horizons. Separate from active trading, this is where compounding does the heavy lifting.</p>
+    </div>
+    <div class="work-card full">
+      <div>
+        <div class="zinvest-logo-placeholder">Zinvest</div>
+      </div>
+      <div>
+        <div class="work-card-num">03</div>
+        <h3>Zinvest</h3>
+        <p>A mutual fund distribution business focused on disciplined, long-term investing. Built on the principles of financial literacy, consistent execution, and wealth creation for every client — regardless of portfolio size.</p>
+        <a href="https://yourzinvestlink.com" target="_blank" class="work-card-link">
+          Visit Zinvest
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+            <path d="M1 11L11 1M11 1H3M11 1V9" stroke="currentColor" stroke-width="1.5"/>
+          </svg>
+        </a>
+      </div>
+    </div>
+  </div>
 </section>
 
-<section id="contact" class="fade">
-<h2>Contact</h2>
-<div class="card">
-<p class="contact-item" onclick="copyText('mirzad.zbm@gmail.com')">
-📧 <a href="mailto:mirzad.zbm@gmail.com">mirzad.zbm@gmail.com</a>
-</p>
-<p class="contact-item" onclick="copyText('+91 96337 16525')">
-📞 <a href="tel:+91 96337 16525">+91 96337 16525</a>
-</p>
-</div>
+<!-- CONNECT -->
+<section>
+  <div class="reveal">
+    <div class="section-label">Social</div>
+    <h2 class="section-title">Follow the journey.</h2>
+  </div>
+  <div class="connect-grid reveal">
+    <a class="social-card" href="https://x.com/mrzd_09?s=21" target="_blank">
+      <h3>X.com</h3>
+      <p>@mrzd_09 · Market insights & trade ideas</p>
+    </a>
+    <a class="social-card" href="https://www.instagram.com/mirzadmanzoor" target="_blank">
+      <h3>Instagram</h3>
+      <p>@mirzadmanzoor · Behind the portfolio</p>
+    </a>
+    <a class="social-card" href="#" target="_blank">
+      <h3>LinkedIn</h3>
+      <p>Professional network & updates</p>
+    </a>
+  </div>
 </section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="reveal">
+    <div class="section-label">Get in Touch</div>
+    <h2 class="section-title">Let's build wealth<br>together.</h2>
+  </div>
+  <div class="contact-row reveal">
+    <div class="contact-card" onclick="copyText('mirzad.zbm@gmail.com')">
+      <div class="contact-card-icon">✉</div>
+      <div class="contact-card-label">Email</div>
+      <div class="contact-card-val">mirzad.zbm@gmail.com</div>
+      <div class="copy-hint">Click to copy</div>
+    </div>
+    <div class="contact-card" onclick="copyText('+91 96337 16525')">
+      <div class="contact-card-icon">◎</div>
+      <div class="contact-card-label">Phone / WhatsApp</div>
+      <div class="contact-card-val">+91 96337 16525</div>
+      <div class="copy-hint">Click to copy</div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div>© 2025 <span>Mirzad Manzoor</span>. All rights reserved.</div>
+  <div>Aluva, Kerala · India</div>
+  <div>Index F&O Trader · <span>Zinvest</span></div>
+</footer>
 
 <script>
-const faders=document.querySelectorAll('.fade');
-window.addEventListener('scroll',()=>{
-faders.forEach(el=>{
-if(el.getBoundingClientRect().top<window.innerHeight-100){el.classList.add('show')}})})
-
-// Charts
-new Chart(document.getElementById('chart1'),{
-type:'line',
-data:{
-labels:["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"],
-datasets:[
-{label:'Portfolio',data:[-1.5, -4.2, -2.1, 1.5, 4.8, 3.2, 6.5, 9.1, 7.4, 10.2, 8.5, 15.0],borderWidth:2,pointRadius:4},
-{label:'Nifty 50',data:[-0.58, -6.44, -0.54, 2.9, 5.8, 6.75, 3.63, 4.77, 2.72, 2.62, 7.55, 10.51],borderWidth:2,pointRadius:4}
-]
-},
-options:{
-plugins:{
-tooltip:{
-backgroundColor:'rgba(15,23,42,0.9)',
-titleColor:'#fff',
-bodyColor:'#cbd5f5',
-padding:12,
-borderColor:'#38bdf8',
-borderWidth:1
-},
-legend:{labels:{color:'#e5e7eb'}}
-},
-scales:{
-x:{ticks:{color:'#94a3b8'}},
-y:{ticks:{color:'#94a3b8'}}
-}
-}
+/* ── CURSOR ── */
+const cursor = document.getElementById('cursor');
+const ring   = document.getElementById('cursorRing');
+document.addEventListener('mousemove', e => {
+  cursor.style.left = e.clientX + 'px';
+  cursor.style.top  = e.clientY + 'px';
+  ring.style.left   = e.clientX + 'px';
+  ring.style.top    = e.clientY + 'px';
+});
+document.querySelectorAll('a, button, .contact-card').forEach(el => {
+  el.addEventListener('mouseenter', () => {
+    ring.style.width = '56px'; ring.style.height = '56px';
+    ring.style.borderColor = 'var(--gold)';
+  });
+  el.addEventListener('mouseleave', () => {
+    ring.style.width = '36px'; ring.style.height = '36px';
+    ring.style.borderColor = 'rgba(201,168,76,0.5)';
+  });
 });
 
-new Chart(document.getElementById('chart2'),{
-type:'doughnut',
-data:{labels:['Equity','Debt','Gold'],datasets:[{data:[60,5,35]}]},
-options:{
-plugins:{
-tooltip:{
-backgroundColor:'rgba(15,23,42,0.9)',
-titleColor:'#fff',
-bodyColor:'#cbd5f5',
-padding:12
-},
-legend:{labels:{color:'#e5e7eb'}}
+/* ── NAV SCROLL ── */
+const nav = document.getElementById('nav');
+window.addEventListener('scroll', () => {
+  nav.classList.toggle('scrolled', window.scrollY > 60);
+});
+
+/* ── SCROLL REVEAL ── */
+const revealEls = document.querySelectorAll('.reveal');
+const obs = new IntersectionObserver((entries) => {
+  entries.forEach((e, i) => {
+    if (e.isIntersecting) {
+      setTimeout(() => e.target.classList.add('visible'), i * 80);
+      obs.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.08 });
+revealEls.forEach(el => obs.observe(el));
+
+/* ── COUNT UP ── */
+const countEls = document.querySelectorAll('[data-target]');
+const countObs = new IntersectionObserver(entries => {
+  entries.forEach(el => {
+    if (el.isIntersecting) {
+      const target  = parseFloat(el.target.dataset.target);
+      const suffix  = el.target.dataset.suffix || '';
+      const isFloat = String(target).includes('.');
+      let start = 0; const dur = 1800; const step = 16;
+      const inc = target / (dur / step);
+      const timer = setInterval(() => {
+        start += inc;
+        if (start >= target) { start = target; clearInterval(timer); }
+        el.target.textContent = (isFloat ? start.toFixed(1) : Math.round(start)) + suffix;
+      }, step);
+      countObs.unobserve(el.target);
+    }
+  });
+}, { threshold: 0.5 });
+countEls.forEach(el => countObs.observe(el));
+
+/* ── COPY ── */
+const toast = document.getElementById('toast');
+let toastTimer;
+function copyText(t) {
+  navigator.clipboard.writeText(t).catch(() => {});
+  clearTimeout(toastTimer);
+  toast.textContent = 'Copied: ' + t;
+  toast.classList.add('show');
+  toastTimer = setTimeout(() => toast.classList.remove('show'), 2400);
 }
-}
+
+/* ── CHART 1: Line — F&O Cumulative P&L ── */
+
+const lineGrad = (ctx, c1, c2) => {
+  const g = ctx.createLinearGradient(0, 0, 0, 300);
+  g.addColorStop(0, c1); g.addColorStop(1, c2); return g;
+};
+
+const ctx1 = document.getElementById('chart1').getContext('2d');
+new Chart(ctx1, {
+  type: 'line',
+  data: {
+    labels: ["JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"],
+    datasets: [
+      {
+        label:'Portfolio',
+        data:[0,4.1,6.8,9.3,11.7,13.9,16.0,14.2,10.6,11.8,12.9,14.0],
+        borderColor:'#e03537',
+        backgroundColor:'rgba(201,168,76,0.2)',
+        borderWidth:2.5, tension:.45, fill:true,
+        pointBackgroundColor:'#e03535', pointRadius:3, pointHoverRadius:6
+      },
+      {
+        label:'Nifty 50',
+        data:[0,1.71,3.10,-2.93,-1.38,0.75,4.51,1.87,-0.28,-0.58,-5.89,-5.83],
+        borderColor:'#444',
+        backgroundColor:'transparent',
+        borderWidth:1.8, tension:.45, fill:false,
+        pointBackgroundColor:'#444', pointRadius:2, pointHoverRadius:5
+      }
+    ]
+  },
+  options: {
+    responsive: true,
+    interaction: { mode: 'index', intersect: false },
+    plugins: {
+      legend: { labels: { color: '#94a3b8', font: { family: 'DM Mono', size: 10 }, boxWidth: 20 } },
+      tooltip: {
+        backgroundColor: '#0c1220',
+        titleColor: '#e5e7eb',
+        bodyColor: '#94a3b8',
+        borderColor: 'rgba(201,168,76,0.4)',
+        borderWidth: 1,
+        padding: 14,
+        callbacks: { label: ctx => ` ${ctx.dataset.label}: ${ctx.parsed.y > 0 ? '+' : ''}${ctx.parsed.y}%` }
+      }
+    },
+    scales: {
+      x: { ticks: { color: '#4a5568', font: { family: 'DM Mono', size: 9 } }, grid: { color: 'rgba(255,255,255,0.03)' } },
+      y: {
+        ticks: { color: '#4a5568', font: { family: 'DM Mono', size: 9 }, callback: v => v + '%' },
+        grid: { color: 'rgba(255,255,255,0.03)' }
+      }
+    }
+  }
+});
+
+/* ── CHART 2: Doughnut — Capital Allocation ── */
+const ctx2 = document.getElementById('chart2').getContext('2d');
+new Chart(ctx2, {
+  type: 'doughnut',
+  data: {
+    labels: ['Active F&O Trading', 'Long-Term Investments'],
+    datasets: [{
+      data: [90, 10],
+      backgroundColor: ['#c9a84c', '#2d3748'],
+      borderColor: '#070b12',
+      borderWidth: 3,
+      hoverOffset: 6,
+    }]
+  },
+  options: {
+    cutout: '70%',
+    plugins: {
+      legend: { position: 'bottom', labels: { color: '#94a3b8', font: { family: 'DM Mono', size: 10 }, padding: 16 } },
+      tooltip: {
+        backgroundColor: '#0c1220',
+        titleColor: '#e5e7eb',
+        bodyColor: '#94a3b8',
+        borderColor: 'rgba(201,168,76,0.4)',
+        borderWidth: 1,
+        padding: 14,
+        callbacks: { label: ctx => ` ${ctx.label}: ${ctx.parsed}%` }
+      }
+    }
+  }
 });
 </script>
-
 </body>
 </html>
